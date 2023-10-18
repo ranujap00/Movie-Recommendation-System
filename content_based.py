@@ -1,6 +1,6 @@
 import pickle
 
-def recommend_content_based(movie):
+def recommend_content_based(movie, n_outputs):
     # load files
     # Load the array from the pickle file
     with open('./PKL_Files/stemmed_df_content_based', 'rb') as file:
@@ -15,7 +15,7 @@ def recommend_content_based(movie):
     movie_index = new_df[new_df['title'] == movie].index[0]
     print(movie_index)
     distances = similarity[movie_index]
-    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:6]
+    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:n_outputs+1]
 
     for i in movie_list:
         d = dict()

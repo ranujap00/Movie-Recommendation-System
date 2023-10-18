@@ -1,37 +1,45 @@
 import streamlit as st
 import random
+import pandas as pd
 from content_based import recommend_content_based
+from collaborative import collaborative_recommend
 
 # In a typical Streamlit app, the Python script is executed from top to bottom every time you interact with the user interface. When you change a setting or input (e.g., adjust the rating slider), Streamlit automatically re-executes the Python script. This is known as "reactivity" in Streamlit, and it's a fundamental feature that allows your app to dynamically respond to user input.
 
-# Sample list of movies (you can replace this with a real dataset)
-movies = [
-    "The Shawshank Redemption",
-    "The Godfather",
-    "The Dark Knight",
-    "Pulp Fiction",
-    "Forrest Gump",
-    "Inception",
-    "The Matrix",
-    "The Lord of the Rings",
-    "Fight Club",
-    "Goodfellas",
-]
 
-# Function to recommend a random movie
-def recommend_movie():
-    return random.choice(movies)
+# Function to display movies in a card format
+def recomnend(movie_name, n_outputs):
+    if mode == 'Content based':
+        result = recommend_content_based(movie_name.lower(), n_outputs)
+
+    elif mode == 'Collaborative':
+        result = collaborative_recommend(movie_name.lower(), n_outputs)
+
+    col1, col2, col3 = st.columns(3)
+    for i, val in enumerate(result):
+        if i % 3 == 0:
+            with col1:
+                st.write(f"{val['title']}")
+                st.image(val['url'], use_column_width=True)
+        elif i % 3 == 1:
+            with col2:
+                st.write(f"{val['title']}")
+                st.image(val['url'], use_column_width=True)
+        else:
+            with col3:
+                st.write(f"{val['title']}")
+                st.image(val['url'], use_column_width=True)
+
+
+def get_movie_list():
+    movies = pd.read_csv('movie_data_with_urls.csv')
+    movList = list(movies['title'])
+
+    return movList
+
 
 # Streamlit UI
 st.title("Movie Recommendation System")
-
-st.write("Welcome to the Movie Recommendation System!")
-
-st.subheader("Click below to get a movie recommendation:")
-if st.button("Recommend a Movie"):
-    # recommended_movie = recommend_movie()
-    result = recommend_content_based('cocoon (1985)')
-    st.write(f"Recommended Movie: {result}")
 
 st.sidebar.title("User Preferences")
 
@@ -39,19 +47,20 @@ st.sidebar.title("User Preferences")
 # For a more advanced system, you would collect and use user data.
 
 st.sidebar.markdown("Select your movie preferences:")
+
+movie = st.sidebar.selectbox("Movie", get_movie_list())
 genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"])
 mode = st.sidebar.selectbox("Recommendation Mode", ["Content based", "Collaborative"])
-rating = st.sidebar.slider("Minimum Rating", 1, 10, 5)
+rating = st.sidebar.slider("Rating", 1, 10, 5)
 
 st.sidebar.markdown("Choose the number of recommendations:")
 num_recommendations = st.sidebar.number_input("Number of Recommendations", min_value=1, max_value=10, value=5)
 
-# In a real system, you would use user preferences to generate recommendations.
+st.subheader("Click below to get a movie recommendation:")
+if st.button("Recommend a Movie"):
+    recomnend(movie, num_recommendations)
 
-st.subheader("Your Recommendations:")
-for _ in range(num_recommendations):
-    recommended_movie = recommend_movie()
-    st.write(f"- {recommended_movie}")
+# In a real system, you would use user preferences to generate recommendations.
 
 st.write("Enjoy your movie!")
 
