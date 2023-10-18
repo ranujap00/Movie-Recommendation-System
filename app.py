@@ -13,18 +13,21 @@ def recommend(movie_name, n_outputs, mode):
         result = collaborative_recommend(movie_name.lower(), n_outputs)
 
     col1, col2, col3 = st.columns(3)
+    title_height = "70px"  # Adjust the height as needed
+
     for i, val in enumerate(result):
+        title_div = f"<div style='height: {title_height}; display: flex; align-items: center;'>{val['title']}</div>"
         if i % 3 == 0:
             with col1:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
         elif i % 3 == 1:
             with col2:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
         else:
             with col3:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
 
 def get_movie_list():
@@ -38,7 +41,7 @@ def getTopRatedMovies(n_outputs):
         new_df = pickle.load(file)
     
     top_movies = new_df.head(n_outputs)
-    
+
     col1, col2, col3 = st.columns(3)
     title_height = "70px"  # Adjust the height as needed
 
