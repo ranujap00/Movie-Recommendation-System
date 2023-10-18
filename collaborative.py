@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 
 
-def collaborative_recommend(movie_name):
+def collaborative_recommend(movie_name, n_outputs):
     # Load files
     with open('./PKL_Files/movie_rating_collaborative', 'rb') as file:
         mov_ratings = pickle.load(file)
@@ -16,7 +16,7 @@ def collaborative_recommend(movie_name):
     # index fetch
     index = np.where(pt.index==movie_name)[0][0]
 
-    similar_items = sorted(list(enumerate(similarity_scores[index])),key=lambda x:x[1],reverse=True)[1:5]
+    similar_items = sorted(list(enumerate(similarity_scores[index])),key=lambda x:x[1],reverse=True)[1:n_outputs+1]
     # simillar items from 1 to 4
     
     data = []
