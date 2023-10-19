@@ -72,7 +72,7 @@ if selected_page == "Recommendation":
     st.sidebar.title("User Preferences")
     st.sidebar.markdown("Select your movie preferences:")
     movie = st.sidebar.selectbox("Movie", get_movie_list())
-    genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"])
+    # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=True)
     mode = st.sidebar.selectbox("Recommendation Mode", ["Content based", "Collaborative"])
     num_recommendations = st.sidebar.number_input("Number of Recommendations", min_value=1, max_value=10, value=5)
     
@@ -86,6 +86,7 @@ elif selected_page == "Popular":
     st.sidebar.markdown("### Popular Page")
     st.sidebar.selectbox("Movie", options=get_movie_list(), key="popular_movie", disabled=True)
     st.sidebar.selectbox("Recommendation Mode", options=["Content based", "Collaborative"], key="popular_mode", disabled=True)
+    # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=False)
     n_movies = st.sidebar.slider("Number of Movies", min_value=1, max_value=50, value=5, key="popular_recommendations", disabled=False)
 
     getTopRatedMovies(n_movies)

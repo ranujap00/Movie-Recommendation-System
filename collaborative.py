@@ -4,7 +4,7 @@ import numpy as np
 
 def collaborative_recommend(movie_name, n_outputs):
     # Load files
-    with open('./PKL_Files/movie_rating_collaborative', 'rb') as file:
+    with open('https://irwa.blob.core.windows.net/irwa-container/D:/SLIIT/Year 03 sem 02/IRWA/IRWA Project/Movie-Recommendation-System/PKL_Files/movie_rating_collaborative', 'rb') as file:
         mov_ratings = pickle.load(file)
 
     with open('./PKL_Files/similarity_scores_collaborative', 'rb') as file:
