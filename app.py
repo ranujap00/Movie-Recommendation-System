@@ -13,18 +13,21 @@ def recommend(movie_name, n_outputs, mode):
         result = collaborative_recommend(movie_name.lower(), n_outputs)
 
     col1, col2, col3 = st.columns(3)
+    title_height = "70px"  # Adjust the height as needed
+
     for i, val in enumerate(result):
+        title_div = f"<div style='height: {title_height}; display: flex; align-items: center;'>{val['title']}</div>"
         if i % 3 == 0:
             with col1:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
         elif i % 3 == 1:
             with col2:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
         else:
             with col3:
-                st.write(f"{val['title']}")
+                st.write(title_div, unsafe_allow_html=True)
                 st.image(val['url'], width=200)
 
 def get_movie_list():
@@ -38,7 +41,7 @@ def getTopRatedMovies(n_outputs):
         new_df = pickle.load(file)
     
     top_movies = new_df.head(n_outputs)
-    
+
     col1, col2, col3 = st.columns(3)
     title_height = "70px"  # Adjust the height as needed
 
@@ -69,7 +72,7 @@ if selected_page == "Recommendation":
     st.sidebar.title("User Preferences")
     st.sidebar.markdown("Select your movie preferences:")
     movie = st.sidebar.selectbox("Movie", get_movie_list())
-    genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"])
+    # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=True)
     mode = st.sidebar.selectbox("Recommendation Mode", ["Content based", "Collaborative"])
     num_recommendations = st.sidebar.number_input("Number of Recommendations", min_value=1, max_value=10, value=5)
     
@@ -83,6 +86,7 @@ elif selected_page == "Popular":
     st.sidebar.markdown("### Popular Page")
     st.sidebar.selectbox("Movie", options=get_movie_list(), key="popular_movie", disabled=True)
     st.sidebar.selectbox("Recommendation Mode", options=["Content based", "Collaborative"], key="popular_mode", disabled=True)
+    # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=False)
     n_movies = st.sidebar.slider("Number of Movies", min_value=1, max_value=50, value=5, key="popular_recommendations", disabled=False)
 
     getTopRatedMovies(n_movies)
