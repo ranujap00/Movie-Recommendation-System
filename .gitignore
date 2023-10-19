@@ -2,3 +2,5 @@
 __pycache__/
 PKL_Files/
 PKL_Files/*.pkl
+
+!movie_data_with_urls.csv
