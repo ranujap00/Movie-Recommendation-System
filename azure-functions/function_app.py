@@ -109,3 +109,51 @@ def collab_based_function(req: func.HttpRequest) -> func.HttpResponse:
              "No Movies to recommend",
              status_code=200
         )
+
+@app.route(route="collab_based_function_personalized", auth_level=func.AuthLevel.FUNCTION)
+def collab_based_function_personalized(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
+
+    n_outputs = int(req.params.get('n_outputs'))
+    userId = int(req.params.get('userId'))
+
+    # Load files
+    with open('./PKL_Files/movie_rating_collaborative', 'rb') as file:
+        mov_ratings = pickle.load(file)
+
+    with open('./PKL_Files/similarity_scores_collaborative', 'rb') as file:
+        similarity_scores = pickle.load(file)
+
+    with open('./PKL_Files/pivot_table_collaborative', 'rb') as file:
+        pt = pickle.load(file)
+
+    # Get the user's ratings from the user-movie rating matrix
+    user_ratings = pt[userId]
+
+    # Create an empty list to store recommended movies
+    recommended_movies = []
+
+    for movie_index, similarity in enumerate(similarity_scores):
+        item = []
+
+        # Skip movies the user has already rated
+        if user_ratings[movie_index] > 0:
+            continue
+
+        temp_df = mov_ratings[mov_ratings['title'] == pt.index[movie_index]]
+        item.extend(list(temp_df.drop_duplicates('title')['title'].values))
+
+        d = dict()
+        d['title'] = item[0]
+        d['url'] = temp_df['Poster_URL'].values.tolist()[0]
+
+        recommended_movies.append(d)
+
+    if len(recommended_movies)> 0:
+        response_data = json.dumps(recommended_movies[:n_outputs])
+        return func.HttpResponse(response_data, mimetype="application/json")
+    else:
+        return func.HttpResponse(
+             "No Movies to recommend",
+             status_code=200
+        )
