@@ -9,6 +9,8 @@ def recommend(movie_name, n_outputs, mode):
         response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/content_based_function?code=RVFv-4r1jBXguVgnPXynSjocCfCtIo4TG5lX12U_7nG6AzFuWFIBjQ==&movie={movie_name}&n_outputs={n_outputs}')
     elif mode == 'Collaborative':
         response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/collab_based_function?code=IdyiqdvfYl65fznPgT_9msXIoZxsJ3cLk-8cPwTRVEuFAzFuerIW9Q==&movie={movie_name}&n_outputs={n_outputs}')
+    else:
+        response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/collab_based_function_personalized?code=_vLhUMaeDx6ozJ7T4GUa_s25SYtoZMoAdwSWo2oe2C0AAzFuouo-Aw==&n_outputs={n_outputs}&userId={user_id}')
 
     if response.status_code == 200:
         result = response.json()
@@ -90,9 +92,15 @@ selected_page = st.selectbox("", ["Recommendation", "Popular"], key="my_selectbo
 if selected_page == "Recommendation":
     st.sidebar.title("User Preferences")
     st.sidebar.markdown("Select your movie preferences:")
-    movie = st.sidebar.selectbox("Movie", get_movie_list())
     # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=True)
-    mode = st.sidebar.selectbox("Recommendation Mode", ["Content based", "Collaborative"])
+    mode = st.sidebar.selectbox("Recommendation Mode", ["Content based", "Collaborative", "Collaborative Personalized"])
+
+    if(mode == 'Collaborative Personalized'):
+        movie = st.sidebar.selectbox("Movie", get_movie_list(), disabled=True)
+        user_id = int(st.sidebar.text_input("User_ID", "1"))
+    else:
+        movie = st.sidebar.selectbox("Movie", get_movie_list())
+
     num_recommendations = st.sidebar.number_input("Number of Recommendations", min_value=1, max_value=10, value=5)
     
     st.subheader("Click below to get a movie recommendation:")
@@ -104,7 +112,7 @@ elif selected_page == "Popular":
     # Disable inputs in the sidebar when "Popular" is selected
     st.sidebar.markdown("### Popular Page")
     st.sidebar.selectbox("Movie", options=get_movie_list(), key="popular_movie", disabled=True)
-    st.sidebar.selectbox("Recommendation Mode", options=["Content based", "Collaborative"], key="popular_mode", disabled=True)
+    st.sidebar.selectbox("Recommendation Mode", options=["Content based", "Collaborative", "Collaborative Personalized"], key="popular_mode", disabled=True)
     # genre = st.sidebar.selectbox("Genre", ["Action", "Drama", "Comedy", "Sci-Fi", "Adventure"], disabled=False)
     n_movies = st.sidebar.slider("Number of Movies", min_value=1, max_value=50, value=5, key="popular_recommendations", disabled=False)
 
