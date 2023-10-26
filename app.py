@@ -6,11 +6,11 @@ import requests
 # Function to display movies in a card format
 def recommend(movie_name, n_outputs, mode):
     if mode == 'Content based':
-        response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/content_based_function?code=RVFv-4r1jBXguVgnPXynSjocCfCtIo4TG5lX12U_7nG6AzFuWFIBjQ==&movie={movie_name}&n_outputs={n_outputs}')
+        response = requests.get(f'https://irwa-mrs-2.azurewebsites.net/api/content_based_function?code=CX51rbIPnsz_rhdLm1Jcs4ITgdIgI_RuzIMnRQ96mQ-zAzFukGNocQ==&movie={movie_name}&n_outputs={n_outputs}')
     elif mode == 'Collaborative':
-        response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/collab_based_function?code=IdyiqdvfYl65fznPgT_9msXIoZxsJ3cLk-8cPwTRVEuFAzFuerIW9Q==&movie={movie_name}&n_outputs={n_outputs}')
+        response = requests.get(f'https://irwa-mrs-2.azurewebsites.net/api/collab_based_function?code=Kj-2usKO_-fMWaz4Vvsa7Ivph4r49sC2MDc81xbZistFAzFugm-Lcw==&movie={movie_name}&n_outputs={n_outputs}')
     else:
-        response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/collab_based_function_personalized?code=_vLhUMaeDx6ozJ7T4GUa_s25SYtoZMoAdwSWo2oe2C0AAzFuouo-Aw==&n_outputs={n_outputs}&userId={user_id}')
+        response = requests.get(f'https://irwa-mrs-2.azurewebsites.net/api/collab_based_function_personalized?code=AAfsLNvViYaycMVrQoYc2Ve4KCC4lYHZDGQQf8P4KjAKAzFuvDY6Rw==&n_outputs={n_outputs}&userId={user_id}')
 
     if response.status_code == 200:
         result = response.json()
@@ -40,7 +40,7 @@ def get_movie_list():
 
 
 def getTopRatedMovies(n_outputs):
-    response = requests.get(f'https://irwa-mrs.azurewebsites.net/api/get_top_movies?code=oGzTT7kXPhOrS1rV-auobqVm-u3C0WcOKJ-vJf7nKHHzAzFuM04VPQ==&n_outputs={n_outputs}')
+    response = requests.get(f'https://irwa-mrs-2.azurewebsites.net/api/get_top_movies?code=0c12Hu90BvRfhX_za7S_tW1IvWzmDYqywnsXeossRaXjAzFur5eXjw==&n_outputs={n_outputs}')
     
     if response.status_code == 200:
         top_movies = response.json()
